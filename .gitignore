@@ -1,4 +1,4 @@
-* .o
-* .exe
-* .bin
-* .swp
+*.o
+*.exe
+*.swp
+[._]*.s[a-v][a-z]
