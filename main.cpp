@@ -9,7 +9,7 @@
 
 using namespace std;
 
-sig_stomic_t signal_caught = 0;
+sig_atomic_t signal_caught = 0;
 mutex logMutex;
 
 void sigint_handler(int sig){
@@ -24,7 +24,7 @@ void logFnc(string text){
 
 int main(){
     signal(SIGINT, &sigint_handler);
-    Dispatcher::int(10);
+    Dispatcher::init(10);
     cout << "Initialised.\n";
     int cycles = 0;
     Request* rq = 0;

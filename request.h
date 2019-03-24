@@ -10,7 +10,7 @@ using namespace std;
 
 typedef void (*logFunction)(string test);
 
-class Request :Public Abstract_Request {
+class Request : public AbstractRequest {
   int value;
   logFunction outFnc;
   public :

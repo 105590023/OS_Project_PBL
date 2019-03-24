@@ -7,7 +7,7 @@ queue<AbstractRequest*> Dispatcher::requests;
 queue<Worker*> Dispatcher::workers;
 mutex Dispatcher::requestsMutex;
 mutex Dispatcher::workersMutex;
-vetor<Worker*> Dispatcher::allWorkers;
+vector<Worker*> Dispatcher::allWorkers;
 vector<thread*> Dispatcher::threads;
 
 /*-----INIT-----*/
@@ -20,7 +20,7 @@ bool Dispatcher::init(int workers)
 		w = new Worker;
 		allWorkers.push_back(w);
 		t = new thread(&Worker::run, w);
-		thread.push_back(t);
+		threads.push_back(t);
 	}
 	return true;
 }
@@ -33,7 +33,7 @@ bool Dispatcher::stop()
 		allWorkers[i]->stop();
 	}
 	cout << "Stopped workers.\n";
-	for(int j = 0; j < threads.size(); ++i)
+	for(int j = 0; j < threads.size(); ++j)
 	{
 		threads[j]->join();
 		cout << "Joined threads.\n";
@@ -49,7 +49,7 @@ void Dispatcher::addRequest(AbstractRequest* request)
 	if(!workers.empty())
 	{
 		Worker* worker = workers.front();
-		Worker->setRequest(request);
+		worker->setRequest(request);
 		condition_variable* cv;
 		worker->getCondition(cv);
 		cv->notify_one();
@@ -63,4 +63,27 @@ void Dispatcher::addRequest(AbstractRequest* request)
 		requests.push(request);
 		requestsMutex.unlock();
 	}
+}
+
+/*-----ADD WORKER-----*/
+bool Dispatcher::addWorker(Worker* worker)
+{
+	bool wait = true;
+	requestsMutex.lock();
+	if(!requests.empty())
+	{
+		AbstractRequest* request = requests.front();
+		worker->setRequest(request);
+		requests.pop();
+		wait = false;
+		requestsMutex.unlock();
+	}
+	else
+	{
+		requestsMutex.unlock();
+		workersMutex.lock();
+		workers.push(worker);
+		workersMutex.unlock();
+	}
+	return wait;
 }
