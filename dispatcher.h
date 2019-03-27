@@ -16,7 +16,7 @@ class Dispatcher
 	static queue<AbstractRequest*> requests;
 	static queue<Worker*> workers;
 	static mutex requestsMutex;
-	static workersMutex;
+	static mutex workersMutex;
 	static vector<Worker*> allWorkers;
 	static vector<thread*> threads;
 	
@@ -24,7 +24,7 @@ class Dispatcher
 		static bool init(int workers);
 		static bool stop();
 		static void addRequest(AbstractRequest* request);
-		static bool allWorker(Worker* worker);
+		static bool addWorker(Worker* worker);
 };
 
 #endif

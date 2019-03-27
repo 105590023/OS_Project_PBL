@@ -1,5 +1,5 @@
 #pragma once
-#ifndeg WORKER_H
+#ifndef WORKER_H
 #define WORKER_H
 
 #include "abstract_request.h"
